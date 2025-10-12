@@ -1,0 +1,33 @@
+{
+    "kind": "collectionType",
+    "collectionName": "sales",
+    "info": {
+        "singularName": "sale",
+        "pluralName": "sales",
+        "displayName": "Sale"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {
+        "i18n": {
+            "localized": false
+        }
+    },
+    "attributes": {
+        "date": {
+            "type": "datetime"
+        },
+        "total": {
+            "type": "integer"
+        },
+        "customer_name": {
+            "type": "string"
+        },
+        "products": {
+            "type": "component",
+            "component": "shared.sale-item",
+            "repeatable": true
+        }
+    }
+}
