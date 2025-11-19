@@ -22,12 +22,12 @@
     "customer_email": {
       "type": "string",
       "required": false,
-      "unique": true
+      "unique": false
     },
     "customer_phone": {
       "type": "string",
       "required": false,
-      "unique": true
+      "unique": false
     },
     "date": {
       "type": "datetime"

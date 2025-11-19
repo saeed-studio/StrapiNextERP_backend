@@ -34,9 +34,7 @@ exports.default = strapi_1.factories.createCoreController("api::sale.sale", ({ s
             if (!startDate || !endDate) {
                 return ctx.badRequest("Unable to determine date range");
             }
-            const startTimeStamp = startDate.getTime();
             const formattedStartDate = startDate.toISOString();
-            const endTimeStamp = endDate.getTime();
             const formattedEndDate = endDate.toISOString();
             const salesModel = "api::sale.sale";
             const tableInfo = strapi.db.metadata.get(salesModel);
@@ -46,7 +44,7 @@ exports.default = strapi_1.factories.createCoreController("api::sale.sale", ({ s
             const tableName = tableInfo.tableName;
             const rawResults = await strapi.db
                 .connection(tableName)
-                .whereBetween("date", [startTimeStamp, endTimeStamp])
+                .whereBetween("date", [formattedStartDate, formattedEndDate])
                 .select(strapi.db.connection.raw("COUNT(*) as count"), strapi.db.connection.raw("SUM(subtotal) as total_sales"), strapi.db.connection.raw("SUM(tax_amount) as total_tax"), strapi.db.connection.raw("SUM(discount_amount) as total_discount"), strapi.db.connection.raw("SUM(total) as total_revenue"))
                 .first();
             const results = rawResults
@@ -67,6 +65,43 @@ exports.default = strapi_1.factories.createCoreController("api::sale.sale", ({ s
         catch (error) {
             strapi.log.error("Error in getSummary controller", error);
             return ctx.throw(500, "An error occurred while fetching the sales summary");
+        }
+    },
+    async getAllSummaries(ctx) {
+        // define the periods we want
+        const periods = ["last-month", "month", "two-weeks", "week"];
+        const summaries = {};
+        for (const period of periods) {
+            // reuse the context with modified params
+            const periodCtx = { ...ctx, params: { period } };
+            const result = await this.getSummary(periodCtx);
+            summaries[period] = result.data;
+        }
+        return { data: summaries };
+    },
+    async getChartsData(ctx) {
+        try {
+            const now = new Date();
+            // Get the first day of the current month
+            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            // Get the last day of the current month
+            const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+            const sales = await strapi.documents("api::sale.sale").findMany({
+                filters: {
+                    date: {
+                        $gte: startOfMonth.toISOString(),
+                        $lte: endOfMonth.toISOString(),
+                    },
+                },
+                fields: ["date", "total"],
+                pagination: { limit: -1 }, // limit: -1 disables pagination
+                sort: ["date:asc"],
+            });
+            ctx.body = sales;
+        }
+        catch (error) {
+            console.error("Error in getSummary:", error);
+            return ctx.throw(500, "An error occurred while fetching sales data");
         }
     },
 }));
