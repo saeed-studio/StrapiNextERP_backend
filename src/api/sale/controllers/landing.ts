@@ -1,4 +1,7 @@
 import { factories } from "@strapi/strapi";
+import type { Core } from "@strapi/strapi";
+
+type Strapi = Core.Strapi;
 
 type CTA = {
   label: string;
@@ -74,188 +77,352 @@ type LandingContent = {
   faq: FaqSection;
 };
 
+type ProductWithMedia = Record<string, unknown> & {
+  image?: unknown;
+};
+
+type DocumentList<T> =
+  | {
+      results?: T[];
+    }
+  | T[];
+
+const FALLBACK_MEDIA = "/product.jpg";
+
 const landingContent: LandingContent = {
   hero: {
-    eyebrow: "ERP Cloud Platform",
-    title: "Orchestrate every workflow from a single command center.",
+    eyebrow: "Unified ERP Cloud",
+    title: "Operate every department from a single source of truth.",
     subtitle:
-      "Modern finance, inventory, HR, and operations that speak the same language. Designed for regional regulations, delivered with enterprise polish.",
+      "Bring finance, inventory, people, and operations together on one secure, regional-ready platform.",
     primaryCta: {
-      label: "شروع رایگان",
+      label: "Start Free",
       href: "/register",
     },
     secondaryCta: {
-      label: "تماشای دمو",
+      label: "Watch Demo",
       href: "#demo",
     },
     stats: [
-      { label: "شرکت فعال", value: "120+" },
-      { label: "زمان استقرار", value: "< 12 روز" },
-      { label: "رضایت مدیران", value: "9.6 / 10" },
+      { label: "Active businesses", value: "120+" },
+      { label: "Average go-live time", value: "< 12 days" },
+      { label: "Executive satisfaction", value: "9.6 / 10" },
     ],
   },
   demo: {
-    title: "یک نمایه زنده از عملکرد سازمان",
+    title: "A live cockpit for your entire company",
     description:
-      "داشبورد لحظه‌ای، ماژول‌های ما کمک می‌کنند جریان فروش، خرید، تولید و منابع انسانی را در همان لحظه مشاهده کنید.",
+      "View sales, purchasing, production, and workforce data in real time. Every module uses the same design language and permission model.",
     highlights: [
-      "رابط کاربری واکنش‌گرا و چندزبانه",
-      "گزارش‌گیری زنده و قابل اشتراک",
-      "یکپارچگی کامل با سیستم‌های مالی موجود",
+      "Responsive, bilingual UI with guided onboarding",
+      "Live dashboards and shareable, export-ready reports",
+      "Native integrations with accounting, banking, and HR systems",
     ],
-    media: "/product.jpg",
+    media: FALLBACK_MEDIA,
   },
   features: [
     {
-      title: "برنامه‌ریزی مالی پیشرفته",
-      description: "اتوماسیون حسابداری و مدیریت نقدینگی در لحظه.",
+      title: "Intelligent financial planning",
+      description:
+        "Automate ledger posting, forecasting, and cash visibility in minutes.",
       icon: "LineChart",
       detail:
-        "همگام‌سازی با بانک و ایجاد گزارش‌های قانونی بدون نیاز به فایل اکسل.",
+        "Bank feeds, regulatory reports, and localized tax packs are generated without spreadsheets.",
     },
     {
-      title: "انبارداری مبتنی بر هوش",
-      description: "ردگیری خودکار سری ساخت، موجودی و هشدار کمبود کالا.",
+      title: "AI-assisted inventory & fulfillment",
+      description:
+        "Track lots, locations, and reservations while preventing stockouts.",
       icon: "Boxes",
       detail:
-        "پیشنهاد هوشمند سفارش مجدد و انبارگردانی با اسکنر یا موبایل.",
+        "Smart reorder suggestions and cycle counts work on handheld scanners or mobile devices.",
     },
     {
-      title: "اتاق کار فروش",
-      description: "CRM داخلی، مدیریت قرارداد و کمیسیون تیم فروش.",
+      title: "Revenue command center",
+      description:
+        "Built-in CRM, quoting, and commission tools keep sales and finance aligned.",
       icon: "Handshake",
       detail:
-        "قیف فروش تعاملی، امتیازدهی لیدها و ارتباط مستقیم با واتساپ/ایمیل.",
+        "Manage funnels, automate approvals, and push updates to WhatsApp, Slack, or email with one click.",
     },
     {
-      title: "منابع انسانی چابک",
-      description: "حضور و غیاب، حقوق و مزایا و پرتال کارمندان.",
+      title: "Agile people operations",
+      description:
+        "Time tracking, payroll, and employee self-service in a modern workspace.",
       icon: "Users",
       detail:
-        "ثبت درخواست‌ها، ارزیابی عملکرد و جریان‌های تایید بدون ایمیل‌های رفت و برگشت.",
+        "Requests, reviews, and policy acknowledgements flow through fast approval paths without chasing emails.",
     },
     {
-      title: "موتور اتوماسیون",
-      description: "گردش‌کار بصری برای تمام سناریوهای سازمانی.",
+      title: "Visual automation engine",
+      description:
+        "Design workflows, alerts, and SLAs using a drag-and-drop builder.",
       icon: "Workflow",
       detail:
-        "با چند کلیک SLA، هشدار، وبهوک و هماهنگی با سرویس‌های بیرونی را بسازید.",
+        "Trigger webhooks, send notifications, or sync with external systems with zero custom code.",
     },
     {
-      title: "امنیت و انطباق",
-      description: "سطوح دسترسی دقیق و گزارش‌های ممیزی آماده.",
+      title: "Enterprise-grade security & compliance",
+      description:
+        "Role-based access, audit trails, and encryption everywhere.",
       icon: "ShieldCheck",
       detail:
-        "ورود دو مرحله‌ای، رمزنگاری داده و تاریخچه کامل برای ISO و مقررات محلی.",
+        "Multi-factor authentication, regional data residency, and SOC-ready logging are included by default.",
     },
   ],
   whyUs: {
-    title: "چرا سازمان‌ها مارا انتخاب می‌کنند؟",
+    title: "Why operations teams trust our ERP",
     description:
-      "تیم متخصص پیاده‌سازی، زیرساخت ابری بومی و کتابخانه‌ای از الگوهای آماده باعث می‌شود در کمترین زمان به ارزش برسید.",
+      "From discovery to onboarding, a dedicated success squad and proven playbooks help you unlock value fast.",
     bullets: [
       {
-        title: "انطباق با فرآیندهای محلی",
-        text: "ماژول‌های مالی و منابع انسانی با قوانین مالیاتی و کار مطابقت کامل دارند.",
+        title: "Localized processes out-of-the-box",
+        text: "Finance and HR modules match regional tax laws, labor codes, and reporting templates.",
       },
       {
-        title: "مدل توسعه‌پذیر",
-        text: "SDK باز و API مستند تضمین می‌کند که بتوانید هر ماژول سفارشی را اضافه کنید.",
+        title: "Enterprise extensibility",
+        text: "Use our documented SDK and API catalog to add custom modules without vendor lock-in.",
       },
       {
-        title: "موفقیت مشتری اختصاصی",
-        text: "از تحلیل فرایند تا آموزش تیم، یک اسکواد کامل کنار شماست.",
+        title: "Shared ownership",
+        text: "Solution architects, change managers, and support engineers stay with you after go-live.",
       },
     ],
     metrics: [
-      { label: "بازگشت سرمایه", value: "۳٫۴ برابر" },
-      { label: "بهبود بهره‌وری", value: "۵۸٪" },
+      { label: "Average ROI in year one", value: "3.4x" },
+      { label: "Productivity lift", value: "58%" },
     ],
   },
   pricing: {
-    title: "طرح‌های شناور برای هر مقیاس",
+    title: "Flexible plans for every stage",
     description:
-      "هزینه‌ها به‌صورت شفاف و بر اساس هر کاربر فعال محاسبه می‌شود. هر پلن شامل پشتیبانی و به‌روزرسانی رایگان است.",
-    note: "برای بیش از 250 کاربر، با تیم فروش جهت پیشنهاد سفارشی صحبت کنید.",
+      "Licenses scale with active users and every plan ships with updates, hosting, and baseline support.",
+    note: "Need more than 250 users or a private cloud region? Our sales team can craft a custom offer.",
     plans: [
       {
         name: "Start",
         price: 0,
-        period: "ماهانه",
-        description: "بهترین گزینه برای تیم‌های تازه‌کار.",
+        period: "per month",
+        description: "Perfect for early teams testing modules together.",
         features: [
-          "۵ کاربر فعال",
-          "ماژول‌های فروش، انبار و مالی پایه",
-          "پشتیبانی از طریق ایمیل",
+          "Up to 5 active users",
+          "Sales, inventory, and core finance modules",
+          "Email support during business hours",
         ],
-        ctaLabel: "شروع رایگان",
+        ctaLabel: "Get Started",
         ctaHref: "/register",
       },
       {
         name: "Growth",
         price: 39,
-        period: "هر کاربر / ماه",
-        description: "اتوماسیون پیشرفته و گزارش‌های تحلیلی.",
+        period: "per user / month",
+        description:
+          "Automation, analytics, and integration power for scaling orgs.",
         features: [
-          "کاربران نامحدود",
-          "اتوماسیون جریان‌کار و API باز",
-          "پشتیبانی چت 24/7",
+          "Unlimited users with role-based access",
+          "Workflow automation builder & open API",
+          "24/7 chat support and onboarding concierge",
         ],
         highlighted: true,
-        badge: "محبوب‌ترین",
-        ctaLabel: "درخواست دمو",
-        ctaHref: "/login",
+        badge: "Most Popular",
+        ctaLabel: "Book a Demo",
+        ctaHref: "#demo",
       },
       {
         name: "Enterprise",
         price: 89,
-        period: "هر کاربر / ماه",
-        description: "انطباق، SLA اختصاصی و SSO.",
+        period: "per user / month",
+        description:
+          "Advanced governance, security, and performance guarantees.",
         features: [
-          "امنیت پیشرفته و SOC 2",
-          "مدیر موفقیت اختصاصی",
-          "مراکز داده چندگانه",
+          "SSO, SCIM, and advanced compliance controls",
+          "Dedicated customer success squad",
+          "Multi-region deployments and premium SLA",
         ],
-        ctaLabel: "گفتگو با فروش",
+        ctaLabel: "Talk to Sales",
         ctaHref: "/contact",
       },
     ],
   },
   faq: {
-    title: "سوالات پرتکرار",
+    title: "Frequently Asked Questions",
     description:
-      "اگر پاسخ موردنظر را پیدا نکردید، تیم ما تنها یک کلیک فاصله دارد.",
+      "Everything you need to evaluate implementation, security, and pricing.",
     items: [
       {
-        category: "راه‌اندازی",
-        question: "فرایند استقرار چقدر طول می‌کشد؟",
+        category: "Implementation",
+        question: "How long does deployment take?",
         answer:
-          "بیشتر مشتریان در کمتر از دو هفته به محیط عملیاتی می‌رسند. تیم موفقیت ما از تحلیل تا آموزش همراه شماست.",
+          "Most teams launch their first modules in 10–12 days. We provide process discovery workshops, data migration support, and onsite or remote training.",
       },
       {
-        category: "هزینه",
-        question: "آیا هزینه مخفی وجود دارد؟",
+        category: "Pricing",
+        question: "Are there any hidden fees?",
         answer:
-          "خیر، تمام هزینه‌ها در پلن انتخابی شما مشخص است. تنها در صورت نیاز به ماژول‌های سفارشی، پیشنهاد جداگانه ارائه می‌شود.",
+          "No. Hosting, updates, and baseline support are included. Optional add-ons like custom training or private cloud regions are quoted upfront.",
       },
       {
-        category: "امنیت",
-        question: "چگونه از داده‌های ما محافظت می‌کنید؟",
+        category: "Security",
+        question: "How do you keep our data safe?",
         answer:
-          "داده‌ها با استانداردهای رمزنگاری روز ذخیره می‌شوند، نسخه پشتیبان روزانه داریم و می‌توانیم به طور اختصاصی در دیتاسنتر شما مستقر شویم.",
+          "Data is encrypted in transit and at rest, we offer daily backups, and our security team monitors the platform 24/7. Enterprise plans add dedicated compliance tooling.",
       },
       {
-        category: "یکپارچگی",
-        question: "آیا می‌توانیم با نرم‌افزارهای موجود ارتباط برقرار کنیم؟",
+        category: "Integrations",
+        question: "Can we connect to existing systems?",
         answer:
-          "بله. API باز، وبهوک و اتصال از پیش‌ساخته با سرویس‌های حسابداری، پرداخت و اتوماسیون فراهم است.",
+          "Absolutely. Use REST and GraphQL APIs, webhooks, and pre-built connectors for accounting, payments, and HR providers.",
       },
     ],
   },
 };
 
-export default factories.createCoreController("api::sale.sale", () => ({
-  async getLanding() {
-    return { data: landingContent };
-  },
-}));
+const getBaseUrl = (strapi: Strapi, origin?: string): string | undefined => {
+  const rawServerUrl = strapi.config.get("server.url");
+  const candidates: Array<string | undefined> = [
+    origin,
+    typeof rawServerUrl === "string" ? rawServerUrl : undefined,
+    process.env.NEXT_PUBLIC_STRAPI_URL,
+    process.env.NEXT_PUBLIC_API_URL,
+    process.env.STRAPI_PUBLIC_URL,
+    process.env.PUBLIC_STRAPI_URL,
+  ];
+
+  return candidates.find(
+    (candidate): candidate is string =>
+      typeof candidate === "string" && candidate.length > 0
+  );
+};
+
+const toAbsoluteUrl = (
+  strapi: Strapi,
+  url?: string,
+  origin?: string
+): string | undefined => {
+  if (!url) {
+    return undefined;
+  }
+
+  if (
+    url.startsWith("http://") ||
+    url.startsWith("https://") ||
+    url.startsWith("//")
+  ) {
+    return url;
+  }
+
+  const baseUrl = getBaseUrl(strapi, origin);
+
+  if (!baseUrl) {
+    return url;
+  }
+
+  const normalizedBase = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+  const normalizedPath = url.startsWith("/") ? url : `/${url}`;
+
+  return `${normalizedBase}${normalizedPath}`;
+};
+
+const extractUploadUrl = (image: unknown): string | undefined => {
+  if (!image) {
+    return undefined;
+  }
+
+  if (Array.isArray(image)) {
+    for (const node of image) {
+      const resolved = extractUploadUrl(node);
+      if (resolved) {
+        return resolved;
+      }
+    }
+    return undefined;
+  }
+
+  if (typeof image !== "object") {
+    return undefined;
+  }
+
+  const objectImage = image as Record<string, unknown>;
+
+  if (typeof objectImage.url === "string") {
+    return objectImage.url;
+  }
+
+  if (objectImage.attributes && typeof objectImage.attributes === "object") {
+    const attributes = objectImage.attributes as Record<string, unknown>;
+    if (typeof attributes.url === "string") {
+      return attributes.url;
+    }
+  }
+
+  if (objectImage.data) {
+    return extractUploadUrl(objectImage.data);
+  }
+
+  return undefined;
+};
+
+const resolveProductPreviewMedia = async (
+  strapi: Strapi,
+  absoluteBaseUrl?: string
+): Promise<string> => {
+  try {
+    const response = (await strapi.documents("api::product.product").findMany({
+      populate: ["image", "category"],
+      sort: { updatedAt: "desc" },
+      page: 1,
+      pageSize: 10,
+      status: "published",
+    })) as DocumentList<ProductWithMedia>;
+
+    const products: ProductWithMedia[] = Array.isArray(response)
+      ? response
+      : Array.isArray(response?.results)
+        ? (response.results as ProductWithMedia[])
+        : [];
+
+    for (const product of products) {
+      if (!product) {
+        continue;
+      }
+
+      const candidateUrl = extractUploadUrl(product.image);
+      if (candidateUrl) {
+        const absolute = toAbsoluteUrl(strapi, candidateUrl, absoluteBaseUrl);
+        if (absolute) {
+          return absolute;
+        }
+      }
+    }
+  } catch (error) {
+    strapi.log.warn("Unable to resolve product preview image", error);
+  }
+
+  return FALLBACK_MEDIA;
+};
+
+export default factories.createCoreController(
+  "api::sale.sale",
+  ({ strapi }) => ({
+    async getLanding(ctx) {
+      const origin =
+        ctx.request?.header?.origin ||
+        ctx.request?.origin ||
+        ctx.request?.header?.referer ||
+        undefined;
+
+      const heroMedia =
+        (await resolveProductPreviewMedia(strapi, origin)) ?? FALLBACK_MEDIA;
+
+      return {
+        data: {
+          ...landingContent,
+          demo: {
+            ...landingContent.demo,
+            media: heroMedia,
+          },
+        },
+      };
+    },
+  })
+);

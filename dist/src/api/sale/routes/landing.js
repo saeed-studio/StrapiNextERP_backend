@@ -2,8 +2,8 @@ module.exports = {
     routes: [
         {
             method: "GET",
-            path: "/sales/summary/:period",
-            handler: "api::sale.sale.getSummary",
+            path: "/sales/landing",
+            handler: "landing.getLanding",
             config: {
                 policies: [],
                 middlewares: [],
