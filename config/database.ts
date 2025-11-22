@@ -2,9 +2,25 @@
 
 import path from 'path';
 
-export default ({ env }) => {
-  // Choose database client; default to 'postgres' for your setup
-  const client = env('DATABASE_CLIENT', 'postgres');
+// Minimal typing for Strapi's env helper
+type EnvFn = {
+  (key: string, defaultValue?: any): any;
+  bool(key: string, defaultValue?: boolean): boolean;
+  int(key: string, defaultValue?: number): number;
+  array?(key: string, defaultValue?: string[]): string[];
+};
+
+type DatabaseClient = 'mysql' | 'postgres' | 'sqlite';
+
+export default ({ env }: { env: EnvFn }) => {
+  const isTest = env('NODE_ENV') === 'test';
+
+  // Choose database client; force sqlite for tests to avoid external DB dependency
+  const rawClient = String(env('DATABASE_CLIENT', 'postgres'));
+  const client: DatabaseClient =
+    isTest || !['mysql', 'postgres', 'sqlite'].includes(rawClient)
+      ? 'sqlite'
+      : (rawClient as DatabaseClient);
 
   // Detect if a full connection string is provided (e.g., for production PaaS)
   const hasUrl = !!env('DATABASE_URL');
@@ -23,7 +39,7 @@ export default ({ env }) => {
         }
       : false;
 
-  const connections = {
+  const connections: Record<DatabaseClient, any> = {
     mysql: {
       connection: {
         host: env('DATABASE_HOST', '127.0.0.1'),
@@ -67,11 +83,12 @@ export default ({ env }) => {
 
     sqlite: {
       connection: {
+        // If DATABASE_FILENAME is empty, fall back to the defaults
         filename: path.join(
           __dirname,
           '..',
           '..',
-          env('DATABASE_FILENAME', '.tmp/data.db'),
+          env('DATABASE_FILENAME') || (isTest ? '.tmp/test.db' : '.tmp/data.db'),
         ),
       },
       useNullAsDefault: true,

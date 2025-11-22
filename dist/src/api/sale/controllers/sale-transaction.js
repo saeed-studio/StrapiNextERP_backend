@@ -1,23 +1,19 @@
 "use strict";
+// Custom sale transaction controller using Document Service API (Strapi v5)
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Custom sale transaction controller using Document Service API (Strapi v5)
- */
 const strapi_1 = require("@strapi/strapi");
-exports.default = strapi_1.factories.createCoreController("api::sale.sale", ({ strapi }) => ({
+exports.default = strapi_1.factories.createCoreController('api::sale.sale', ({ strapi }) => ({
     async createSaleTransaction(ctx) {
         try {
             // 1. Extract `data` object from the incoming request body
             // Example result: { customer_name: "...", products: [...], subtotal: ..., total: ... }
             const { data } = ctx.request.body;
             // 2. Run all sale creation + product stock updates inside a database transaction
-            const result = await strapi.db.transaction(async (trx) => {
+            const result = await strapi.db.transaction(async () => {
                 // ================================
                 // STEP 1 — CREATE SALE DOCUMENT
                 // ================================
-                const sale = await strapi
-                    .documents("api::sale.sale")
-                    .create({
+                const sale = await strapi.documents('api::sale.sale').create({
                     data: {
                         // Basic sale metadata
                         customer_name: data.customer_name,
@@ -49,14 +45,16 @@ exports.default = strapi_1.factories.createCoreController("api::sale.sale", ({ s
                     // 2.1 Find the product document
                     // If frontend sends numeric ID → we search by filters.id
                     // (If frontend sends documentId, you would use: documentId: productItem.product)
-                    const product = await strapi
-                        .documents("api::product.product")
-                        .findFirst({
+                    const product = await strapi.documents('api::product.product').findFirst({
                         filters: { id: productItem.product },
                     });
                     // 2.2 Ensure product exists
                     if (!product) {
                         throw new Error(`Product with ID ${productItem.product} not found`);
+                    }
+                    // 2.2b Ensure stock is present (Strapi types mark it optional)
+                    if (product.stock == null) {
+                        throw new Error(`Stock is not set for product with ID ${productItem.product}`);
                     }
                     // 2.3 Calculate the new stock after sale
                     const updatedStock = product.stock - productItem.quantity;
@@ -66,9 +64,7 @@ exports.default = strapi_1.factories.createCoreController("api::sale.sale", ({ s
                     }
                     // 2.5 Update product stock
                     // IMPORTANT: Document Service requires updating by documentId, not numeric id
-                    await strapi
-                        .documents("api::product.product")
-                        .update({
+                    await strapi.documents('api::product.product').update({
                         documentId: product.documentId,
                         data: { stock: updatedStock },
                     });
@@ -81,7 +77,7 @@ exports.default = strapi_1.factories.createCoreController("api::sale.sale", ({ s
         }
         catch (error) {
             // Log any error for debugging
-            strapi.log.error("Transaction error:", error);
+            strapi.log.error('Transaction error:', error);
             // Send 500 server error to client with message
             ctx.throw(500, error.message);
         }

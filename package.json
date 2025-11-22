@@ -12,22 +12,41 @@
     "start": "strapi start",
     "strapi": "strapi",
     "upgrade": "npx @strapi/upgrade latest",
-    "upgrade:dry": "npx @strapi/upgrade latest --dry"
+    "upgrade:dry": "npx @strapi/upgrade latest --dry",
+    "lint": "eslint src --ext .ts,.tsx,.js,.jsx",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch",
+    "test:unit": "jest --runInBand --selectProjects unit",
+    "test:integration": "jest --runInBand --selectProjects integration",
+    "lint:fix": "eslint src --ext .ts,.tsx,.js,.jsx --fix"
   },
   "dependencies": {
     "@strapi/plugin-cloud": "5.26.0",
     "@strapi/plugin-users-permissions": "5.26.0",
     "@strapi/strapi": "5.26.0",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
+    "better-sqlite3": "^12.4.6",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "pg": "8.8.0",
+    "prettier": "^3.6.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
-    "styled-components": "^6.0.0"
+    "styled-components": "^6.0.0",
+    "supertest": "^7.1.4",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/supertest": "^6.0.3",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.5",
     "typescript": "^5"
   },
   "engines": {

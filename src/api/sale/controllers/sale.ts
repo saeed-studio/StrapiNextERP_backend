@@ -106,9 +106,9 @@ export default factories.createCoreController(
     },
     async getAllSummaries(ctx) {
       // define the periods we want
-      const periods = ["last-month", "month", "two-weeks", "week"];
+      const periods = ["last-month", "month", "two-weeks", "week"] as const;
 
-      const summaries = {};
+      const summaries: Partial<Record<(typeof periods)[number], SummaryData>> = {};
 
       for (const period of periods) {
         // reuse the context with modified params

@@ -4,7 +4,6 @@
     "moduleResolution": "Node",
     "lib": ["ES2020"],
     "target": "ES2019",
-    "strict": false,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
@@ -13,7 +12,11 @@
     "noEmitOnError": true,
     "noImplicitThis": true,
     "outDir": "dist",
-    "rootDir": "."
+    "rootDir": ".",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     // Include root files
@@ -35,8 +38,8 @@
 
     // Do not include admin files in the server compilation
     "src/admin/",
-    // Do not include test files
-    "**/*.test.*",
+    // // Do not include test files
+    // "**/*.test.*",
     // Do not include plugins in the server compilation
     "src/plugins/**"
   ]
